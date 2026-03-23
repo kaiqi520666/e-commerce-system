@@ -1,6 +1,6 @@
-import api from '../index'
+import api from '../../core'
 
 export const infoApi = {
-  person: () => api.post('/user/person'),
-  updatePerson: (data) => api.post('/user/updatePerson', data),
+  person: () => api.post('/app/user/info/person'),
+  updatePerson: (data) => api.post('/app/user/info/updatePerson', data),
 }

@@ -1,5 +1,5 @@
 import { BaseService, CoolCommException } from '@cool-midway/core';
-import { Config, Provide } from '@midwayjs/core';
+import { Config, Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import { UserInfoEntity } from '../entity/info';
@@ -15,26 +15,28 @@ export class UserInfoService extends BaseService {
   userInfoEntity: Repository<UserInfoEntity>;
   @Config('module.user.jwt')
   jwtConfig;
+  @Inject()
+  ctx;
 
   /**
    * 获取用户信息
    * @param id
    * @returns
    */
-  async person(id) {
-    const info = await this.userInfoEntity.findOneBy({ id: Equal(id) });
+  async person() {
+    const userId = this.ctx.user.id;
+    const info = await this.userInfoEntity.findOneBy({ id: Equal(userId) });
     delete info.password;
     return info;
   }
 
   /**
    * 更新用户信息
-   * @param id
    * @param param
    * @returns
    */
-  async updatePerson(id, param) {
-    const info = await this.person(id);
+  async updatePerson(param) {
+    const info = await this.person();
     if (!info) throw new CoolCommException('用户不存在');
 
     // 只允许更新白名单字段
@@ -49,7 +51,10 @@ export class UserInfoService extends BaseService {
       return acc;
     }, {});
 
-    return await this.userInfoEntity.update({ id }, updateData);
+    return await this.userInfoEntity.update(
+      { id: this.ctx.user.id },
+      updateData
+    );
   }
   /**
    * 刷新token

@@ -3,7 +3,7 @@ import { CatalogGoodsEntity } from '../../entity/goods';
 import { CatalogGoodsService } from '../../service/goods';
 
 @CoolController({
-  api: ['page', 'info'],
+  api: ['page', 'list', 'info'],
   entity: CatalogGoodsEntity,
   service: CatalogGoodsService,
   infoIgnoreProperty: ['rawJson', 'createTime', 'updateTime', 'tenantId'],

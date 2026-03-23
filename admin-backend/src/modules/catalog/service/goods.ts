@@ -33,15 +33,12 @@ export class CatalogGoodsService extends BaseService {
     return leafIds;
   }
 
-  async page(query: any) {
-    const { page = 1, size = 10, categoryId } = query;
-    const currentPage = Number(page);
-    const pageSize = Number(size);
-
+  private async createListQueryBuilder(categoryId?: number | string) {
     const queryBuilder = this.goodsEntity
       .createQueryBuilder('goods')
       .select([
         'goods.id',
+        'goods.categoryId',
         'goods.name',
         'goods.thumb',
         'goods.price',
@@ -50,6 +47,8 @@ export class CatalogGoodsService extends BaseService {
         'goods.goodsType',
         'goods.minOrderNum',
         'goods.maxOrderNum',
+        'goods.label',
+        'goods.unit',
       ]);
 
     queryBuilder.where('goods.status = :status', { status: 1 });
@@ -67,14 +66,7 @@ export class CatalogGoodsService extends BaseService {
         const categoryIds = new Set(categories.map(item => item.id));
 
         if (!categoryIds.has(currentCategoryId)) {
-          return {
-            list: [],
-            pagination: {
-              page: currentPage,
-              size: pageSize,
-              total: 0,
-            },
-          };
+          return null;
         }
 
         const childrenMap = new Map<number, number[]>();
@@ -98,6 +90,36 @@ export class CatalogGoodsService extends BaseService {
     }
 
     queryBuilder.orderBy('goods.id', 'DESC');
+    return queryBuilder;
+  }
+
+  async list(query: any) {
+    const queryBuilder = await this.createListQueryBuilder(query?.categoryId);
+
+    if (!queryBuilder) {
+      return [];
+    }
+
+    return await queryBuilder.getMany();
+  }
+
+  async page(query: any) {
+    const { page = 1, size = 10, categoryId } = query;
+    const currentPage = Number(page);
+    const pageSize = Number(size);
+    const queryBuilder = await this.createListQueryBuilder(categoryId);
+
+    if (!queryBuilder) {
+      return {
+        list: [],
+        pagination: {
+          page: currentPage,
+          size: pageSize,
+          total: 0,
+        },
+      };
+    }
+
     queryBuilder.skip((currentPage - 1) * pageSize);
     queryBuilder.take(pageSize);
 
