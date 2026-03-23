@@ -47,6 +47,7 @@
   - 商城壳布局已内聚到 `src/App.vue`，不再单独维护 `AppShell.vue`
   - 公共导航组件：`src/components/AppNavigation.vue`
   - 公共 UI 组件：`GlassPanel`、`ProductCard`、`CategoryRail`、`SectionHeader`、`EmptyState`、`UiIcon`
+  - 已新增可复用页面顶部栏组件 `src/components/PageTopBar.vue`，用于固定在页面顶部的返回 + 标题头部；商品详情页已接入，后续其它独立详情/流程页优先复用。
   - 已新增可复用动态背景组件 `src/components/MatrixBackground.vue`，用于黑客帝国式字母下落氛围层；后续如需同类背景动效优先复用，不要在页面内重复手写字符背景。
   - 全局覆盖组件：`GlobalToast`、`GlobalConfirm`、`GlobalLoading`
   - 5 个页面视图：`src/views/NoticeView.vue`、`CategoryView.vue`、`CartView.vue`、`OrdersView.vue`、`ProfileView.vue`

@@ -5,6 +5,7 @@ import { catalogApi } from '@/api'
 import { useCartStore } from '@/stores/cart'
 import { useOverlayStore } from '@/stores/overlay'
 import EmptyState from '@/components/EmptyState.vue'
+import PageTopBar from '@/components/PageTopBar.vue'
 import SafeImage from '@/components/SafeImage.vue'
 import UiIcon from '@/components/UiIcon.vue'
 import { formatPrice } from '@/utils/price'
@@ -356,22 +357,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <PageTopBar
+    fixed
+    :title="goods?.name || '商品详情'"
+    container-class="max-w-[980px]"
+  />
+
   <div
-    class="goods-flow-page mx-auto max-w-[980px] pb-[calc(10.5rem+env(safe-area-inset-bottom))] lg:pb-6"
+    class="goods-flow-page mx-auto mt-[5.1rem] max-w-[980px] pb-[calc(10.5rem+env(safe-area-inset-bottom))] lg:mt-[5.4rem] lg:pb-6"
   >
-    <div class="goods-flow-topbar">
-      <button type="button" class="goods-flow-back" @click="router.back()">
-        <span class="inline-flex rotate-180">
-          <UiIcon name="chevron" />
-        </span>
-      </button>
-      <h1 class="goods-flow-title">{{ goods?.name || '商品详情' }}</h1>
-      <span class="goods-flow-back opacity-0" aria-hidden="true">
-        <span class="inline-flex rotate-180">
-          <UiIcon name="chevron" />
-        </span>
-      </span>
-    </div>
 
     <EmptyState
       v-if="isLoaded && !goods"
@@ -644,47 +638,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 0.95rem;
-}
-
-.goods-flow-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.15rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    rgba(7, 17, 36, 0.78);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 18px 46px rgba(2, 8, 23, 0.28);
-  padding: 0.8rem 0.9rem;
-}
-
-.goods-flow-back {
-  display: inline-flex;
-  height: 2.25rem;
-  width: 2.25rem;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #f8fafc;
-  cursor: pointer;
-}
-
-.goods-flow-title {
-  margin: 0;
-  flex: 1;
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .goods-flow-banner,
