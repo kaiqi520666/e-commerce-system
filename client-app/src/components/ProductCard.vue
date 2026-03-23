@@ -1,6 +1,5 @@
 <script setup>
 import GlassPanel from './GlassPanel.vue'
-import SafeImage from './SafeImage.vue'
 import UiIcon from './UiIcon.vue'
 import { formatPrice } from '@/utils/price'
 
@@ -72,13 +71,18 @@ function getPurchaseStatus(isClose) {
           </span>
         </div>
 
-        <SafeImage
+        <img
+          v-if="product.thumb"
           :src="product.thumb"
           :alt="product.name"
-          fallback-text="NEBULA"
-          image-class="w-full aspect-4/3 rounded-[0.9rem] object-cover object-center opacity-88 transition duration-300 group-hover:scale-[1.03]"
-          fallback-class="flex aspect-4/3 items-center justify-center rounded-[0.9rem] bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.18),transparent_50%),rgba(255,255,255,0.04)] text-lg text-cyan-200/75"
+          class="w-full aspect-4/3 rounded-[0.9rem] object-cover object-center opacity-88 transition duration-300 group-hover:scale-[1.03] flex justify-between"
         />
+        <div
+          v-else
+          class="flex aspect-4/3 items-center justify-center rounded-[0.9rem] bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.18),transparent_50%),rgba(255,255,255,0.04)]"
+        >
+          <span class="font-display text-lg tracking-[0.28em] text-cyan-200/75">NEBULA</span>
+        </div>
       </div>
 
       <div class="flex flex-1 flex-col gap-3">
@@ -96,18 +100,14 @@ function getPurchaseStatus(isClose) {
               ¥{{ formatPrice(props.product.price) }}
             </p>
           </div>
-          <RouterLink
-            v-if="Number(props.product.isClose) !== 1"
-            :to="`/goods/${props.product.id}`"
-            class="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/3 px-3 py-2 text-xs font-medium text-slate-300 transition duration-200 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-cyan-100"
-          >
-            详情
-            <UiIcon name="arrow" />
-          </RouterLink>
           <button
-            v-else
-            class="inline-flex cursor-not-allowed items-center justify-center gap-1.5 rounded-full border border-white/8 bg-white/[0.02] px-3 py-2 text-xs font-medium text-slate-500"
-            disabled
+            class="inline-flex items-center justify-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium transition duration-200"
+            :class="
+              Number(props.product.isClose) === 1
+                ? 'cursor-not-allowed border-white/8 bg-white/[0.02] text-slate-500'
+                : 'cursor-pointer border-white/10 bg-white/3 text-slate-300 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-cyan-100'
+            "
+            :disabled="Number(props.product.isClose) === 1"
           >
             详情
             <UiIcon name="arrow" />
